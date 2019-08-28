@@ -9,3 +9,4 @@ class Controller(BaseHandler):
 
     def get(self, param=False):
         self.write(json.dumps({'message': 'this is %s' % __file__}) + "\n")
+

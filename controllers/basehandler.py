@@ -1,5 +1,6 @@
 import tornado
 import json
+import base64
 
 class BaseHandler(tornado.web.RequestHandler):
     def _request_summary(self):
@@ -22,7 +23,35 @@ class BaseHandler(tornado.web.RequestHandler):
         if "X-Forwarded-For" in self.request.headers:
             remote_ip = self.request.headers["X-Forwarded-For"]
             self.request.remote_ip = remote_ip
+        self.check_authenticated()
 
     def options(self, param=False):
         self.set_header("Allow", "GET,HEAD,PUT,POST,DELETE,OPTIONS")
         self.set_status(200)
+
+    def request_auth(self):
+        self.set_status(401)
+        self.set_header('WWW-Authenticate', 'Basic realm=JSL')
+        self.finish()
+        return False
+
+    def check_authenticated(self):
+        if not "Authorization" in self.request.headers:
+            return self.request_auth()
+        print 'auth=', self.request.headers["Authorization"]
+
+        auth_decoded = base64.decodestring(self.request.headers["Authorization"][6:])
+        username, password = auth_decoded.split(':', 2)
+
+        print 'user / pass=', username, password
+
+        if self.params.username != username:
+            return self.request_auth()
+        if self.params.password != password:
+            return self.request_auth()
+
+
+        print 'AUTH OK!'
+
+
+
