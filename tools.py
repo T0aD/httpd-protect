@@ -2,7 +2,7 @@
 import subprocess, shlex
 import os
 
-def run(cmd, cwd=False):
+def run(cmd, cwd=False, ret_stdout=False):
     if not cwd is False:
         os.chdir(cwd)
     print os.getcwd(), '$', cmd
@@ -22,5 +22,10 @@ def run(cmd, cwd=False):
     if p.returncode != 0:
         print 'rv not 0:', p.returncode
 
+    if ret_stdout:
+        return stdout
     return p.returncode
 
+def run_and_return(cmd, cwd=False):
+    stdout = run(cmd, cwd, ret_stdout=True)
+    return stdout

@@ -14,17 +14,14 @@ def up(params):
 
     #if rv != 0:
     if True:
-        #print 'creating basic chain..', params.chain_name
         tools.run("iptables -N %s" % params.chain_name)
         tools.run("iptables -A %s -j REJECT" % params.chain_name)
 
         if len(params.allow):
             for addr in params.allow:
-                #print 'allow:', addr
                 tools.run("iptables -I %s --source %s -j ACCEPT" % (params.chain_name, addr))
 
         for port in params.protected_port:
-            #print 'protecting port %d' % port
             tools.run("iptables -I INPUT -p tcp --dport %d -j %s" % (port, params.chain_name))
 
     # check:
@@ -33,7 +30,14 @@ def up(params):
 
 
 def is_whitelist(params, remote_ip):
-
+    rv = tools.run_and_return("iptables -L %s -n" % (params.chain_name))
+    print rv
+    rrv = rv.split("\n")
+    for l in rrv:
+        print 'l=', l
+        if remote_ip in l:
+            print 'remote_ip found in!'
+            return True
     return False
 
 def whitelist(params, remote_ip):
@@ -43,3 +47,4 @@ def whitelist(params, remote_ip):
     else:
         print 'already in white list'
 
+    tools.run("iptables -L %s -n -v" % params.chain_name)
