@@ -14,10 +14,10 @@ def make_app(params):
   ################################################################## ROUTES
   parameters = dict(params=params)
 
-  from controllers import auth
+  from controllers import iptables
   
   urls = [
-    ("/", auth.Controller, parameters),
+    ("/", iptables.Controller, parameters),
   ]
   settings = {}
   return Application(urls, **settings)
@@ -46,11 +46,15 @@ if __name__ == '__main__':
   g = parser.add_argument_group("Server")
   g.add_argument('--port', '-p', type=int, default=3000,        help="port to bind httpd server to")
 
-  g = parser.add_argument_group("Firewall")
+  g = parser.add_argument_group("Basic auth")
   g.add_argument('--username', type=str, default="admin",       help="username used to whitelist")
   g.add_argument('--password', type=str, default="adminpwd",    help="password to whitelist")
+  g.add_argument('--realm', type=str, default="httpd-protect",    help="name of the realm to display")
+
+  g = parser.add_argument_group("Iptables")
   g.add_argument('--protected-port', type=int, nargs='*', default=[9200],    help="port to protect")
   g.add_argument('--chain-name', type=str, default="protector", help="default name of the chain to use to protect targetted ports")
+  
 
   #parser.add_argument('--log-level', default=0)
   #parser.add_argument('--debug', default=False, action='store_true')

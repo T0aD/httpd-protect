@@ -31,27 +31,25 @@ class BaseHandler(tornado.web.RequestHandler):
 
     def request_auth(self):
         self.set_status(401)
-        self.set_header('WWW-Authenticate', 'Basic realm=JSL')
+        self.set_header('WWW-Authenticate', 'Basic realm=%s' % self.params.realm)
         self.finish()
         return False
 
     def check_authenticated(self):
         if not "Authorization" in self.request.headers:
             return self.request_auth()
-        print 'auth=', self.request.headers["Authorization"]
-
+        
         auth_decoded = base64.decodestring(self.request.headers["Authorization"][6:])
         username, password = auth_decoded.split(':', 2)
-
-        print 'user / pass=', username, password
 
         if self.params.username != username:
             return self.request_auth()
         if self.params.password != password:
             return self.request_auth()
 
+        self.username, self.password = username, password
 
-        print 'AUTH OK!'
+        return True
 
 
 
