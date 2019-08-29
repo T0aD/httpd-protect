@@ -6,6 +6,9 @@ import iptables
 class Controller(BaseHandler):
 
     def get(self, param=False):
-        iptables.whitelist(self.params, self.request.remote_ip)
-        self.write(json.dumps({__file__: 'remote address %s whitelisted' % self.request.remote_ip}) + "\n")
+        rv = iptables.whitelist(self.params, self.request.remote_ip)
+        s = ""
+        if not rv:
+            s = " already"
+        self.write(json.dumps({__file__: 'remote address %s%s whitelisted' % (self.request.remote_ip, s)}) + "\n")
 

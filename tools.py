@@ -13,9 +13,9 @@ def run(cmd, cwd=False, ret_stdout=False):
     except Exception as e:
         print 'Unknown exception:', e
         raise
-
-    if len(stdout) != 0:
-        print 'stdout>', stdout
+    
+    #if len(stdout) != 0:
+    #    print 'stdout>', stdout
     if len(stderr) != 0:
         print 'stderr>', stderr
 
