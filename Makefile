@@ -1,6 +1,7 @@
 RSYNC		= -e ssh -azv --cvs-exclude --delete
 
 HOST		= root@factorio.lescigales.org
+HOST		= root@new.walky.fr
 DIR		= /var/tmp/httpd-protect
 REMOTE_DEVEL	= $(HOST):$(DIR)
 

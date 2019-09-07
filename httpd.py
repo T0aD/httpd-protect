@@ -64,6 +64,7 @@ if __name__ == '__main__':
   g.add_argument('--protected-port', type=int, nargs='*', default=[9200,9300],    help="port to protect")
   g.add_argument('--chain-name', type=str, default="httpd-protected", help="default name of the chain to use to protect targetted ports")
   g.add_argument('--allow', type=str, nargs='*', default=["172/8"],    help="list of addresses to whitelist from the start")
+  g.add_argument('--blackhole-port', type=int, default=666,   help="a port not used on your server that will serve as a blackhole during prerouting phases")
 
   #parser.add_argument('--log-level', default=0)
   #parser.add_argument('--debug', default=False, action='store_true')
